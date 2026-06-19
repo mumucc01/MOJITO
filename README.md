@@ -16,14 +16,6 @@ MOJITO/                   # 仓库根目录
 └── README.md
 ```
 
-| 组件 | 是否必需 | 作用 |
-|------|---------|------|
-| `MOJITO/` | **是** | MOJITO agent、分层融合、训练与 NAVSIM 评测 |
-| `Diffusion-Planner/` | **是** | `Diffusion_Planner_Decoder`、VPSDE、观测/状态归一化器 |
-| `nuplan-devkit/` | **是** | `nuplan.*` 地图、自车状态、轨迹采样等接口 |
-| `pluto-main/` | **否** | MOJITO 流程中未使用 |
-
----
 
 ## 本地运行指南
 
@@ -31,11 +23,7 @@ MOJITO/                   # 仓库根目录
 
 详见 **[docs/environment.md](docs/environment.md)**（含完整依赖列表与常见问题）。
 
-当前机器上已验证可用的环境：
 
-```bash
-conda activate /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/conda_env/diffusion_drive
-```
 
 从零安装：
 
@@ -58,7 +46,7 @@ pip install -e navsim/agents/diffusiondrive/Uni3D/Pointnet2_PyTorch
 ### 第二步：加载环境变量
 
 ```bash
-cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+cd /path/to/MOJITO
 source setup_env.sh
 ```
 
@@ -76,7 +64,7 @@ source setup_env.sh
 数据集准备方式与 **[DiffusionDrive](https://github.com/hustvl/DiffusionDrive)** 完全相同（NAVSIM / OpenScene 下载、maps、navsim_logs、sensor_blobs）。本机示例路径：
 
 ```
-/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/Diffusion_Drive_raw/DiffusionDrive/dataset/
+/path/to/MOJITO/MOJITO/dataset/
 ├── maps/                          # nuPlan 地图 (sg-one-north, us-ma-boston, ...)
 ├── navsim_logs/
 │   ├── trainval/                  # 训练日志 (symlink)
@@ -102,7 +90,7 @@ weights/checkpoints/mojito_navsim.ckpt   # epoch_79，从训练 run 复制
 ### 第五步：训练
 
 ```bash
-cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+cd /path/to/MOJITO
 source setup_env.sh
 bash MOJITO/scripts/training/run_diffusiondrive_training.sh
 ```
@@ -133,28 +121,17 @@ python MOJITO/navsim/planning/script/run_metric_caching.py \
 运行评测：
 
 ```bash
-cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+cd /path/to/MOJITO
 source setup_env.sh
 bash MOJITO/scripts/evaluation/run_diffusiondrive.sh
 ```
 
 默认加载 `weights/checkpoints/mojito_navsim.ckpt`。
 
----
-
-## 核心代码
-
-| 模块 | 路径 |
-|------|------|
-| 分层三模态融合 | `MOJITO/navsim/agents/diffusiondrive/hierarchical_fusion_module_pt3.py` |
-| Agent 配置 | `MOJITO/navsim/agents/diffusiondrive/transfuser_config.py` |
-| 模型 | `MOJITO/navsim/agents/diffusiondrive/transfuser_model_v2.py` |
-| 路径工具 | `MOJITO/navsim/mojito_paths.py` |
 
 ## 开源说明
 
-- `weights/` 下的大文件已加入 gitignore；发布时建议使用 Git LFS 或 Hugging Face。
-- 将整个 `MOJITO/` 文件夹作为 GitHub 仓库根目录上传。
+- `weights/` 我们将在近期开源所有模型权重。
 
 ## 致谢
 
