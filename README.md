@@ -34,14 +34,6 @@ cd /path/to/MOJITO
 bash scripts/install_env.sh
 ```
 
-或手动安装：
-
-```bash
-cd MOJITO
-pip install -r requirements.txt
-pip install -r ../requirements-mojito.txt
-pip install -e navsim/agents/diffusiondrive/Uni3D/Pointnet2_PyTorch
-```
 
 ### 第二步：加载环境变量
 
@@ -83,9 +75,6 @@ source setup_env.sh
 
 预训练 backbone 位于 `weights/pretrained/`。评测用的 MOJITO 训练 checkpoint：
 
-```
-weights/checkpoints/mojito_navsim.ckpt   # epoch_79，从训练 run 复制
-```
 
 ### 第五步：训练
 
@@ -95,13 +84,13 @@ source setup_env.sh
 bash MOJITO/scripts/training/run_diffusiondrive_training.sh
 ```
 
-默认使用 `MOJITO_CACHE_PATH` 下的预处理缓存（默认：`AD-Dataset/V10`）。
+默认使用 `MOJITO_CACHE_PATH` 下的预处理缓存
 
 若尚无缓存，可先构建：
 
 ```bash
 source setup_env.sh
-python MOJITO/navsim/planning/script/run_dataset_caching.py \
+python MOJITO/navsim/planning/script/run_dataset_caching.py \ 
     agent=diffusiondrive_agent \
     experiment_name=training_mojito_agent \
     train_test_split=navtrain
@@ -109,7 +98,7 @@ python MOJITO/navsim/planning/script/run_dataset_caching.py \
 
 ### 第六步：评测（navtest PDMS）
 
-若需要，先构建 metric cache：
+若需要，先构建 metric cache(同DiffusionDrive)：
 
 ```bash
 source setup_env.sh

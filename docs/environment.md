@@ -3,14 +3,14 @@
 本文档说明如何复现 MOJITO 训练/评估环境。你当前可用的环境：
 
 ```
-/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/conda_env/diffusion_drive
+/path/to/conda_env/mojito
 ```
 
 ## 快速使用（已有环境）
 
 ```bash
-conda activate /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/conda_env/diffusion_drive
-cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+conda activate /path/to/conda_env/mojito
+cd /path/to/MOJITO
 source setup_env.sh
 ```
 
