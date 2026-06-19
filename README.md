@@ -1,6 +1,6 @@
 # MOJITO
 
-**MOJITO** 的官方 PyTorch 实现**（ECCV 2026）**。
+**MOJITO** 的官方 PyTorch 实现。 **（ECCV 2026）**
 
 MOJITO 基于 [DiffusionDrive](https://github.com/hustvl/DiffusionDrive)，引入分层三模态融合（图像 / LiDAR / 轨迹），结合 DINOv3、Uni3D 与 Point Transformer v3，在 NAVSIM 上实现端到端自动驾驶。
 
