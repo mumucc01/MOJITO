@@ -1,0 +1,26 @@
+# MOJITO extra dependencies (on top of MOJITO/requirements.txt)
+
+# --- MOJITO model ---
+diffusers>=0.25.0
+einops>=0.8.0
+safetensors>=0.4.0
+mmcv>=2.0.0
+mmengine>=0.10.0
+open3d>=0.18.0
+
+# Headless server: use headless OpenCV (avoid libGLX)
+opencv-python-headless>=4.9.0
+
+# Point cloud / PTv3
+spconv-cu120>=2.3.6
+
+# Optional: faster attention (FA3 may fail on old libstdc++)
+flash-attn==2.6.3
+
+# Already in MOJITO/requirements.txt but pinned here for reference:
+# torch==2.0.1
+# torchvision==0.15.2
+# pytorch-lightning==2.2.1
+# hydra-core==1.2.0
+# timm
+# numpy==1.23.4

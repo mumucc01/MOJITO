@@ -1,0 +1,182 @@
+# MOJITO
+
+**MOJITO** 的官方 PyTorch 实现（ECCV 2026）。
+
+MOJITO 基于 [DiffusionDrive](https://github.com/hustvl/DiffusionDrive)，引入分层三模态融合（图像 / LiDAR / 轨迹），结合 DINOv3、Uni3D 与 Point Transformer v3，在 NAVSIM 上实现端到端自动驾驶。
+
+## 项目结构
+
+```
+MOJITO/                   # 仓库根目录
+├── MOJITO/              # 主代码：NAVSIM agent、训练与评测
+├── Diffusion-Planner/    # 必需：扩散解码器与归一化器
+├── nuplan-devkit/        # 必需：地图、轨迹、仿真 API
+├── weights/              # 预训练权重与 checkpoint 目录
+├── setup_env.sh          # 环境变量配置
+└── README.md
+```
+
+| 组件 | 是否必需 | 作用 |
+|------|---------|------|
+| `MOJITO/` | **是** | MOJITO agent、分层融合、训练与 NAVSIM 评测 |
+| `Diffusion-Planner/` | **是** | `Diffusion_Planner_Decoder`、VPSDE、观测/状态归一化器 |
+| `nuplan-devkit/` | **是** | `nuplan.*` 地图、自车状态、轨迹采样等接口 |
+| `pluto-main/` | **否** | MOJITO 流程中未使用 |
+
+---
+
+## 本地运行指南
+
+### 第一步：环境配置
+
+详见 **[docs/environment.md](docs/environment.md)**（含完整依赖列表与常见问题）。
+
+当前机器上已验证可用的环境：
+
+```bash
+conda activate /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/conda_env/diffusion_drive
+```
+
+从零安装：
+
+```bash
+conda create -n mojito python=3.9 -y
+conda activate mojito
+cd /path/to/MOJITO
+bash scripts/install_env.sh
+```
+
+或手动安装：
+
+```bash
+cd MOJITO
+pip install -r requirements.txt
+pip install -r ../requirements-mojito.txt
+pip install -e navsim/agents/diffusiondrive/Uni3D/Pointnet2_PyTorch
+```
+
+### 第二步：加载环境变量
+
+```bash
+cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+source setup_env.sh
+```
+
+`setup_env.sh` 会设置本机的数据集、实验输出目录与训练缓存路径。如需覆盖，在 `source` 之前设置：
+
+```bash
+export OPENSCENE_DATA_ROOT=/your/dataset
+export NAVSIM_EXP_ROOT=/your/exp
+export MOJITO_CACHE_PATH=/your/training_cache
+source setup_env.sh
+```
+
+### 第三步：数据集
+
+数据集准备方式与 **[DiffusionDrive](https://github.com/hustvl/DiffusionDrive)** 完全相同（NAVSIM / OpenScene 下载、maps、navsim_logs、sensor_blobs）。本机示例路径：
+
+```
+/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/Diffusion_Drive_raw/DiffusionDrive/dataset/
+├── maps/                          # nuPlan 地图 (sg-one-north, us-ma-boston, ...)
+├── navsim_logs/
+│   ├── trainval/                  # 训练日志 (symlink)
+│   ├── test/                      # 测试日志 (symlink)
+│   └── exp/
+├── sensor_blobs/
+│   ├── trainval/                  # 图像与 LiDAR 数据 (symlink)
+│   └── test/
+├── navhard_two_stage/             # navhard 划分 (symlink)
+├── private_test_hard_two_stage/
+├── warmup_two_stage/
+└── dataset/                       # 可选额外 symlink
+```
+
+### 第四步：权重
+
+预训练 backbone 位于 `weights/pretrained/`。评测用的 MOJITO 训练 checkpoint：
+
+```
+weights/checkpoints/mojito_navsim.ckpt   # epoch_79，从训练 run 复制
+```
+
+### 第五步：训练
+
+```bash
+cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+source setup_env.sh
+bash MOJITO/scripts/training/run_diffusiondrive_training.sh
+```
+
+默认使用 `MOJITO_CACHE_PATH` 下的预处理缓存（默认：`AD-Dataset/V10`）。
+
+若尚无缓存，可先构建：
+
+```bash
+source setup_env.sh
+python MOJITO/navsim/planning/script/run_dataset_caching.py \
+    agent=diffusiondrive_agent \
+    experiment_name=training_mojito_agent \
+    train_test_split=navtrain
+```
+
+### 第六步：评测（navtest PDMS）
+
+若需要，先构建 metric cache：
+
+```bash
+source setup_env.sh
+python MOJITO/navsim/planning/script/run_metric_caching.py \
+    train_test_split=navtest \
+    cache.cache_path="${NAVSIM_EXP_ROOT}/metric_cache"
+```
+
+运行评测：
+
+```bash
+cd /lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO
+source setup_env.sh
+bash MOJITO/scripts/evaluation/run_diffusiondrive.sh
+```
+
+默认加载 `weights/checkpoints/mojito_navsim.ckpt`。
+
+---
+
+## 核心代码
+
+| 模块 | 路径 |
+|------|------|
+| 分层三模态融合 | `MOJITO/navsim/agents/diffusiondrive/hierarchical_fusion_module_pt3.py` |
+| Agent 配置 | `MOJITO/navsim/agents/diffusiondrive/transfuser_config.py` |
+| 模型 | `MOJITO/navsim/agents/diffusiondrive/transfuser_model_v2.py` |
+| 路径工具 | `MOJITO/navsim/mojito_paths.py` |
+
+## 开源说明
+
+- `weights/` 下的大文件已加入 gitignore；发布时建议使用 Git LFS 或 Hugging Face。
+- 将整个 `MOJITO/` 文件夹作为 GitHub 仓库根目录上传。
+
+## 致谢
+
+- [DiffusionDrive](https://github.com/hustvl/DiffusionDrive) (CVPR 2025 Highlight)
+- [Diffusion-Planner](https://github.com/ZhengYinan-AIR/Diffusion-Planner) (ICLR 2025)
+- [NAVSIM](https://github.com/autonomousvision/navsim)
+- [nuplan-devkit](https://github.com/motional/nuplan-devkit)
+
+## 引用
+
+```bibtex
+@inproceedings{mojito2026,
+  title={MOJITO},
+  author={},
+  booktitle={ECCV},
+  year={2026}
+}
+
+@inproceedings{diffusiondrive,
+  title={DiffusionDrive: Truncated Diffusion Model for End-to-End Autonomous Driving},
+  author={Bencheng Liao and others},
+  booktitle={CVPR},
+  year={2025}
+}
+```

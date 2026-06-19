@@ -1,0 +1,12 @@
+logs/*
+*/.vscode/*
+*/.git/*
+exp/*
+.vscode
+__pycache__/
+*.egg-info/
+ckpt/
+image*
+exp/
+cache/
+checkpoints/

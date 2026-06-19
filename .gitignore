@@ -1,0 +1,17 @@
+weights/
+**/weights/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.log
+data/
+outputs/
+logs/
+checkpoints/
+Diffusion-Planner/DiffusionDrive/diffusiondrive_navsim_88p1_PDMS
