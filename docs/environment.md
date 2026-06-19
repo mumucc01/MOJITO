@@ -98,7 +98,6 @@ pip install opencv-python-headless
 | 图像 | `opencv-python-headless`, `Pillow` | 数据读取（无 GUI 用 headless） |
 | 其他 | `mmcv`, `mmengine`, `safetensors` | 部分模块与权重加载 |
 
-完整版本锁定见仓库根目录 [`requirements-mojito.txt`](requirements-mojito.txt)。
 
 ## 子项目说明
 
