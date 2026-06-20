@@ -1,5 +1,0 @@
-- train_test_split=navtest
-- agent=diffusiondrive_agent
-- worker=single_machine_thread_pool
-- agent.checkpoint_path=/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/MOJITO/weights/checkpoints/mojito_navsim.ckpt
-- experiment_name=mojito_eval
