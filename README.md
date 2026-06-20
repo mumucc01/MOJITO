@@ -138,11 +138,4 @@ bash MOJITO/scripts/evaluation/run_diffusiondrive.sh
   booktitle={ECCV},
   year={2026}
 }
-
-@inproceedings{diffusiondrive,
-  title={DiffusionDrive: Truncated Diffusion Model for End-to-End Autonomous Driving},
-  author={Bencheng Liao and others},
-  booktitle={CVPR},
-  year={2025}
-}
 ```
