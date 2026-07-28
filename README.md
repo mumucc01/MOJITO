@@ -132,10 +132,13 @@ bash MOJITO/scripts/evaluation/run_diffusiondrive.sh
 ## 引用
 
 ```bibtex
-@inproceedings{mojito2026,
-  title={MOJITO},
-  author={},
-  booktitle={ECCV},
-  year={2026}
+@misc{cheng2026mojitomodaljointlearning,
+      title={MOJITO: Modal Joint Learning for Unified End-to-End Autonomous Driving}, 
+      author={Zhijing Cheng and Xuancheng Zhang and Donglin Di and Lei Fan and Baorui Ma and Hao Li and Xun Yang},
+      year={2026},
+      eprint={2607.23511},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2607.23511}, 
 }
 ```
