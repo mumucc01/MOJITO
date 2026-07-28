@@ -1,6 +1,6 @@
 # MOJITO
 
-**MOJITO** 的官方 PyTorch 实现。 **（ECCV 2026）**
+**MOJITO**（ECCV 2026）。[![arXiv](https://img.shields.io/badge/arXiv-2607.23511-b31b1b.svg?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2607.23511)
 
 MOJITO 基于 [DiffusionDrive](https://github.com/hustvl/DiffusionDrive)，引入分层三模态融合（图像 / LiDAR / 轨迹）实现端到端自动驾驶。
 
