@@ -1,135 +1,199 @@
-# MOJITO
+# MOJITO (**ECCV 2026**)
 
-**MOJITO**（**ECCV 2026**）。[![arXiv](https://img.shields.io/badge/arXiv-2607.23511-b31b1b.svg?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2607.23511)
 
-MOJITO 基于 [DiffusionDrive](https://github.com/hustvl/DiffusionDrive)，引入分层三模态融合（图像 / LiDAR / 轨迹）实现端到端自动驾驶。
+MOJITO is an end-to-end autonomous driving framework built upon [DiffusionDrive](https://github.com/hustvl/DiffusionDrive). It introduces hierarchical three-modal fusion across **vision**, **LiDAR**, and **trajectory/action representations**, enabling unified perception and planning for end-to-end autonomous driving.
 
-## 项目结构
+## Project Structure
 
 ```
-MOJITO/                   # 仓库根目录
-├── MOJITO/               # 主代码：NAVSIM agent、训练与评测
-├── Diffusion-Planner/   
-├── nuplan-devkit/        
-├── weights/              # 预训练权重与 checkpoint 目录
-├── setup_env.sh          # 环境变量配置
+MOJITO/                   
+├── MOJITO/               # Main codebase: NAVSIM agent, training, and evaluation
+├── Diffusion-Planner/    # Diffusion-based trajectory planning module
+├── nuplan-devkit/        # nuPlan development toolkit
+├── weights/              # Pre-trained weights and model checkpoints
+├── setup_env.sh          # Environment configuration script
 └── README.md
 ```
 
+---
 
-## 本地运行指南
+# Local Setup Guide
 
-### 第一步：环境配置
+## Step 1: Environment Setup
 
-详见 **[docs/environment.md](docs/environment.md)**（含完整依赖列表与常见问题）。
+Please refer to **[docs/environment.md](docs/environment.md)** for the complete dependency list, installation instructions, and common issues.
 
-
-
-从零安装：
+### Installation from Scratch
 
 ```bash
 conda create -n mojito python=3.9 -y
 conda activate mojito
+
 cd /path/to/MOJITO
 bash scripts/install_env.sh
 ```
 
+---
 
-### 第二步：加载环境变量
+## Step 2: Configure Environment Variables
+
+Before running training or evaluation, load the environment configuration:
 
 ```bash
 cd /path/to/MOJITO
 source setup_env.sh
 ```
 
-`setup_env.sh` 设置本机的数据集、实验输出目录与训练缓存路径。如需覆盖，在 `source` 之前设置：
+`setup_env.sh` configures the dataset paths, experiment directories, and training cache locations.
+
+If you need to customize these paths, override them before sourcing:
 
 ```bash
 export OPENSCENE_DATA_ROOT=/your/dataset
 export NAVSIM_EXP_ROOT=/your/exp
 export MOJITO_CACHE_PATH=/your/training_cache
+
 source setup_env.sh
 ```
 
-### 第三步：数据集
-Train数据集需重新处理。
-Eval数据集准备方式与 **[DiffusionDrive](https://github.com/hustvl/DiffusionDrive)** 相同（NAVSIM / OpenScene 下载、maps、navsim_logs、sensor_blobs）。本机示例路径：
+---
+
+# Step 3: Dataset Preparation
+
+The **training split requires additional preprocessing**.
+
+The evaluation dataset preparation follows the same procedure as **[DiffusionDrive](https://github.com/hustvl/DiffusionDrive)**, including:
+
+- NAVSIM / OpenScene datasets
+- nuPlan maps
+- navsim logs
+- sensor blobs (camera images and LiDAR point clouds)
+
+A typical dataset directory is organized as follows:
 
 ```
 /path/to/MOJITO/MOJITO/dataset/
-├── maps/                          # nuPlan 地图 (sg-one-north, us-ma-boston, ...)
+
+├── maps/                          
+│   ├── sg-one-north
+│   ├── us-ma-boston
+│   └── ...
+
 ├── navsim_logs/
-│   ├── trainval/                  
-│   ├── test/                     
+│   ├── trainval/
+│   ├── test/
 │   └── exp/
+
 ├── sensor_blobs/
-│   ├── trainval/                  # 图像与 LiDAR 数据 
+│   ├── trainval/                  # Camera images and LiDAR point clouds
 │   └── test/
-├── navhard_two_stage/             # navhard 划分 
+
+├── navhard_two_stage/             # NAVSIM-v2 navhard split
+
 ├── private_test_hard_two_stage/
+
 ├── warmup_two_stage/
-└── dataset/                      
+
+└── dataset/
 ```
 
-### 第四步：权重
+---
 
-预训练 backbone 位于 `weights/pretrained/`。评测用的 MOJITO 训练 checkpoint：
+# Step 4: Model Weights
 
+The pre-trained backbone weights are located at:
 
-### 第五步：训练
+```
+weights/pretrained/
+```
+
+The official MOJITO training checkpoints used for evaluation will be released soon.
+
+---
+
+# Step 5: Training
+
+To train MOJITO:
 
 ```bash
 cd /path/to/MOJITO
 source setup_env.sh
+
 bash MOJITO/scripts/training/run_diffusiondrive_training.sh
 ```
 
-默认使用 `MOJITO_CACHE_PATH` 下的预处理缓存
+The training pipeline automatically uses the preprocessing cache specified by:
 
-若尚无缓存，可先构建：
+```
+MOJITO_CACHE_PATH
+```
+
+If the cache does not exist, build it first:
 
 ```bash
 source setup_env.sh
-python MOJITO/navsim/planning/script/run_dataset_caching.py \ 
+
+python MOJITO/navsim/planning/script/run_dataset_caching.py \
     agent=diffusiondrive_agent \
     experiment_name=training_mojito_agent \
     train_test_split=navtrain
 ```
 
-### 第六步：评测（navtest PDMS）
+---
 
-若需要，先构建 metric cache(同DiffusionDrive)：
+# Step 6: Evaluation (NAVSIM navtest PDMS)
+
+## Metric Cache Preparation
+
+If required, build the metric cache following the same procedure as DiffusionDrive:
 
 ```bash
 source setup_env.sh
+
 python MOJITO/navsim/planning/script/run_metric_caching.py \
     train_test_split=navtest \
     cache.cache_path="${NAVSIM_EXP_ROOT}/metric_cache"
 ```
 
-运行评测：
+## Run Evaluation
 
 ```bash
 cd /path/to/MOJITO
 source setup_env.sh
+
 bash MOJITO/scripts/evaluation/run_diffusiondrive.sh
 ```
 
-默认加载 `weights/checkpoints/mojito_navsim.ckpt`。
+The default evaluation checkpoint is:
 
+```
+weights/checkpoints/mojito_navsim.ckpt
+```
 
-## 开源说明
+---
 
-- `weights/` 我们将在近期开源所有模型权重。
+# Open-Source Roadmap
 
-## 致谢
+- We will release all official MOJITO model checkpoints under `weights/` soon.
 
-- [DiffusionDrive](https://github.com/hustvl/DiffusionDrive) (CVPR 2025 Highlight)
-- [Diffusion-Planner](https://github.com/ZhengYinan-AIR/Diffusion-Planner) (ICLR 2025)
+---
+
+# Acknowledgements
+
+MOJITO is built upon and benefits from the following excellent open-source projects:
+
+- [DiffusionDrive](https://github.com/hustvl/DiffusionDrive) (**CVPR 2025 Highlight**)
+- [Diffusion-Planner](https://github.com/ZhengYinan-AIR/Diffusion-Planner) (**ICLR 2025**)
 - [NAVSIM](https://github.com/autonomousvision/navsim)
 - [nuplan-devkit](https://github.com/motional/nuplan-devkit)
 
-## 引用
+We sincerely thank the authors for their valuable contributions to the autonomous driving community.
+
+---
+
+# Citation
+
+If you find MOJITO useful for your research, please consider citing:
 
 ```bibtex
 @misc{cheng2026mojitomodaljointlearning,
