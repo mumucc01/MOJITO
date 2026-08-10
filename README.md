@@ -1,5 +1,6 @@
 # MOJITO (**ECCV 2026**)
 
+[![arXiv](https://img.shields.io/badge/arXiv-2607.23511-b31b1b.svg)](https://arxiv.org/abs/2607.23511)
 
 MOJITO is an end-to-end autonomous driving framework built upon [DiffusionDrive](https://github.com/hustvl/DiffusionDrive). It introduces hierarchical three-modal fusion across **vision**, **LiDAR**, and **trajectory/action representations**, enabling unified perception and planning for end-to-end autonomous driving.
 
