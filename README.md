@@ -125,7 +125,7 @@ You can also download the checkpoint manually from the [Hugging Face repository]
 After downloading, ensure that the default evaluation checkpoint is located at:
 
 ```text
-weights/checkpoints/mojito_navsim.ckpt
+weights/checkpoints/mojito.ckpt
 ```
 
 The pre-trained backbone weights should be placed under:
@@ -141,7 +141,7 @@ weights/
 ├── pretrained/
 │   └── ...
 └── checkpoints/
-    └── mojito_navsim.ckpt
+    └── mojito.ckpt
 ```
 
 ---
