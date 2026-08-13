@@ -19,12 +19,10 @@ def CosineAnnealingWarmUpRestarts(optimizer, epoch, warm_up_epoch, start_factor=
     
     assert epoch >= warm_up_epoch
     
-    # 预热阶段：线性增加学习率
     warmup_scheduler = LinearLR(optimizer, 
                                start_factor=start_factor, 
                                total_iters=warm_up_epoch-1)
     
-    # 主训练阶段：余弦退火
     cosine_scheduler = CosineAnnealingLR(optimizer, 
                                         T_max=epoch - warm_up_epoch, 
                                         eta_min=eta_min)

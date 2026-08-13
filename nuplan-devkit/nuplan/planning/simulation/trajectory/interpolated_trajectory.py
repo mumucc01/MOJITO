@@ -94,7 +94,7 @@ class InterpolatedTrajectory(AbstractTrajectory):
             f"Trajectory end time: ({end_time.time_s}) >= Latest interpolation time ({max(time_points).time_s}) "
         )
 
-        interpolation_times = [t.time_us for t in time_points] #41个时间点
+        interpolation_times = [t.time_us for t in time_points]
         linear_states = list(self._function_interp_linear(interpolation_times))
         angular_states = list(self._angular_interpolator.interpolate(interpolation_times))
 

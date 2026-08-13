@@ -17,13 +17,6 @@ from PIL import Image
 import numpy as np
 
 def save_first_batch_as_image(tensor, save_path):
-    """
-    将 [B, C, H, W] 维度的Tensor中的第一个batch保存为图片
-    
-    Args:
-        tensor (torch.Tensor): 输入Tensor，形状为 [B, C, H, W]
-        save_path (str): 图片保存路径（包含文件名和扩展名，如：'/path/to/save/image.png'）
-    """
     if tensor.dim() != 4:
         raise ValueError(f"输入Tensor应为4维 [B, C, H, W]，当前维度为: {tensor.dim()}")
     

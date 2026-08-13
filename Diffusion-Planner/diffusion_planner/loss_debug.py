@@ -30,14 +30,9 @@ import torch
 
 def gaussian_noise_constrained(mask, noise_init, B, P, T, x_min, y_min, ppm):
     """
-    mask: [B, H, W] 或 [H, W]，1 = 可行, 0 = 不可行
-    noise_init: [B, P, T, 2]，原始高斯噪声（标准正态）
-    x_min, y_min: BEV 网格左下角在 meter 坐标中的值
     ppm: pixels per meter
 
-    返回:
-        out: [B, P, T, 2] 噪声 (与原版保持一致：在“噪声空间”)
-             xy_meter = out * std_xy + mean_xy
+    xy_meter = out * std_xy + mean_xy
     """
 
     device = noise_init.device

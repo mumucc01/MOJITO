@@ -23,47 +23,30 @@ import numpy as np
 '''
 
 def save_first_batch_as_image(tensor, save_path):
-    """
-    将 [B, C, H, W] 维度的Tensor中的第一个batch保存为图片
-    
-    Args:
-        tensor (torch.Tensor): 输入Tensor，形状为 [B, C, H, W]
-        save_path (str): 图片保存路径（包含文件名和扩展名，如：'/path/to/save/image.png'）
-    """
-    # 检查输入Tensor的维度
     if tensor.dim() != 4:
         raise ValueError(f"输入Tensor应为4维 [B, C, H, W]，当前维度为: {tensor.dim()}")
     
-    # 检查通道数（支持1通道灰度图或3通道RGB图）
     if tensor.size(1) not in [1, 3]:
         raise ValueError(f"通道数应为1或3，当前通道数为: {tensor.size(1)}")
     
-    # 获取第一个batch
-    first_batch = tensor[0]  # 形状变为 [C, H, W]
+    first_batch = tensor[0]
     
-    # 确保目录存在
     #os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
-    # 保存图片
     save_image(first_batch, save_path)
     
     print(f"图片已保存至: {save_path}")
 
 def save_as_rgb(tensor, save_path):
-    """
-    将三个通道合并为RGB图像并保存
-    """
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
     data = tensor[0]  # [3, 256, 1024]
     
-    # 转换为HWC格式 [256, 1024, 3]
     if torch.is_tensor(data):
         img = data.permute(1, 2, 0).cpu().detach().numpy()
     else:
         img = data.transpose(1, 2, 0)
     
-    # 标准化到[0, 1]范围
     img_min = img.min()
     img_max = img.max()
     if img_max > img_min:

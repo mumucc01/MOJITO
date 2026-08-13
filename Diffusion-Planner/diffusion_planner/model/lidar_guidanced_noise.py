@@ -10,19 +10,8 @@ class lidar_guidance_noise_sampling(nn.Module):
         
     def v1(self, mask, B, P, T):
         """
-        mask: [H, W], 1 = 可行, 0 = 不可行
-        x_min, y_min: BEV 网格左下角在 meter 坐标中的值
         ppm: pixels per meter
-        返回:
-            out: [B, P, T, 2] 噪声 (与原版保持一致：在“噪声空间”)
-                xy_meter = out * std_xy + mean_xy
-        逻辑:
-        1) 一次性采样 out ~ N(mu, sigma^2)
-        2) 映射到 meter 坐标, 取对应格子看 mask 是否可行
-        3) 对所有不可行点, 找到最近的可行格子中心:
-            - 距离定义在 meter 空间中
-            - 若有多个距离相同, 取这些格子中离原点 (0,0) 最近的
-        4) 将这些点替换为对应中心点在“噪声空间”的坐标
+        xy_meter = out * std_xy + mean_xy
         """
         x_min = self.x_min
         y_min = self.y_min
@@ -98,19 +87,8 @@ class lidar_guidance_noise_sampling(nn.Module):
 
     def v2(self, mask, B, P, T):
         """
-        mask: [H, W], 1 = 可行, 0 = 不可行
-        x_min, y_min: BEV 网格左下角在 meter 坐标中的值
         ppm: pixels per meter
-        返回:
-            out: [B, P, T, 2] 噪声 (与原版保持一致：在“噪声空间”)
-                xy_meter = out * std_xy + mean_xy
-        逻辑:
-        1) 一次性采样 out ~ N(mu, sigma^2)
-        2) 映射到 meter 坐标, 取对应格子看 mask 是否可行
-        3) 对所有不可行点, 找到最近的可行格子中心:
-            - 距离定义在 meter 空间中
-            - 若有多个距离相同, 取这些格子中离原点 (0,0) 最近的
-        4) 将这些点替换为对应中心点在“噪声空间”的坐标
+        xy_meter = out * std_xy + mean_xy
         """
         x_min = self.x_min
         y_min = self.y_min

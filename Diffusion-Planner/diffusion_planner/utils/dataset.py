@@ -32,12 +32,6 @@ def visualize_noise_grid_on_lidar(
     ppm: float,
     save_path: str,
 ):
-    """
-    lidar_feature: [1,H,W] 或 [H,W]，0/1，可行区域 mask
-    noise: [B, P, T, 2]，这里你是 [1,1,T,2]
-    x_min, y_min, ppm: 必须和 Lidar_CZJ.get_feasible_voxel_feature 里的配置一致
-    save_path: 保存 PNG 的路径
-    """
     if lidar_feature.dim() == 3:
         lidar_feature = lidar_feature.squeeze(0)
     assert lidar_feature.dim() == 2, f"lidar_feature 应该是 [H,W]，现在是 {lidar_feature.shape}"

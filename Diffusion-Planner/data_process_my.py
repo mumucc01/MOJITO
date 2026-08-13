@@ -25,7 +25,6 @@ from nuplan.common.actor_state.state_representation import Point2D
 import os
 
 def all_images_exist(image_path_list, root_dir):
-    """检查所有 image_path_list 中的 jpg 是否存在"""
     for img_dict in image_path_list:
         for k, rel_path in img_dict.items():
             abs_path = os.path.join(root_dir, rel_path)
@@ -257,10 +256,10 @@ if __name__ == "__main__":
 
     os.makedirs(args.save_path, exist_ok=True)
     db_files = None
-    sensor_root = '/lpai/volumes/base-3da-ali-sh-mix/zhangxc/DiffusionPlanner/nuplan_dataset/nuplan-v1.1/sensor_blobs'   #自动查找db文件
+    sensor_root = '/lpai/volumes/base-3da-ali-sh-mix/zhangxc/DiffusionPlanner/nuplan_dataset/nuplan-v1.1/sensor_blobs'
 
     with open('/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/nuplan-dataset/nuplan_mini_log_train.json', "r", encoding="utf-8") as file:
-        log_names = json.load(file)  #读取log: db文件
+        log_names = json.load(file)
     '''
     map_version = "nuplan-maps-v1.0"    
     builder = NuPlanScenarioBuilder(args.data_path, args.map_path, sensor_root, db_files, map_version)
@@ -279,4 +278,3 @@ if __name__ == "__main__":
         json.dump(processed_files, json_file, indent=4)
 
     print(f"Successfully processed {len(processed_files)} scenarios")
-    

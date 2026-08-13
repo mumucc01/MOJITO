@@ -113,7 +113,6 @@ class DiffusionPlanner(AbstractPlanner):
             print("load random model")
         
         '''
-        # 单独加载 image_backbone
         if hasattr(self._planner, 'image_backbone'):
             image_backbone_ckpt = '/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/DiffusionPlanner_v10/Diffusion-Planner/DiffusionDrive/diffusiondrive_navsim_88p1_PDMS'
             print("Loading image_backbone weights from:", image_backbone_ckpt)

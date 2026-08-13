@@ -8,17 +8,6 @@ class Lidar_Mask(nn.Module):
         self._config = TransfuserConfig_Raster()
 
     def get_feasible_voxel_feature(self, lidar_points: torch.Tensor) -> torch.Tensor:
-        """
-        输入: lidar_points [3, N] (x, y, z)
-        输出: feature [ H, W] (float32, 0/1)
-            1 = 可行区域
-            0 = 不可行区域 (有 z >= 0.2 的点)
-        规则:
-            - 某格子内:
-                - 没有任何点           → 可行
-                - 有点 & 所有点 z<0.2 → 可行
-                - 有点 & 存在 z>=0.2  → 不可行
-        """
         assert lidar_points.dim() == 2 and lidar_points.shape[0] == 3, \
             f"lidar_points shape must be [3, N], got {lidar_points.shape}"
 

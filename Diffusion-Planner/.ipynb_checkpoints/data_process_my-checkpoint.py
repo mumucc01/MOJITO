@@ -25,7 +25,6 @@ from nuplan.common.actor_state.state_representation import Point2D
 import os
 
 def all_images_exist(image_path_list, root_dir):
-    """检查所有 image_path_list 中的 jpg 是否存在"""
     for img_dict in image_path_list:
         for k, rel_path in img_dict.items():
             abs_path = os.path.join(root_dir, rel_path)

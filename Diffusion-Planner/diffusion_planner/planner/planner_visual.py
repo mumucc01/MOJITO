@@ -250,7 +250,6 @@ class DiffusionPlanner(AbstractPlanner):
         """
         inputs = self.planner_input_to_model_inputs(current_input)
         
-        #可能要做一个normalize
         inputs = self.observation_normalizer(inputs)  
       
         sensor_image = sensor_image.to(torch.float32) 
@@ -376,5 +375,3 @@ class DiffusionPlanner(AbstractPlanner):
            
 
         return report
-    
-    

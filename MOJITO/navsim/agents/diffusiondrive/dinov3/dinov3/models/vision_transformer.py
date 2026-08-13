@@ -291,7 +291,6 @@ class DinoVisionTransformer(nn.Module):
             #        output.append(x)
             #tensor_list = [sublist[0] for sublist in x]
 
-            # 使用 torch.stack 将这些 tensors 合并成一个新的 tensor
             #x = torch.stack(tensor_list)
             for i in range(start+1, end+1):
                 blk = self.blocks[i]
@@ -312,7 +311,7 @@ class DinoVisionTransformer(nn.Module):
             else:
                 rope_sincos = None
             x = blk(x, rope_sincos)
-            return x #这是个tensor #[B,1029,384]
+            return x #[B,1029,384]
 
     def get_intermediate_layers(
         self,
@@ -359,8 +358,8 @@ class DinoVisionTransformer(nn.Module):
             ]
         if not return_class_token and not return_extra_tokens:
             return tuple(outputs)
-        elif return_class_token and not return_extra_tokens: #走这个
-            return tuple(zip(outputs, class_tokens)) #两个都是list
+        elif return_class_token and not return_extra_tokens:
+            return tuple(zip(outputs, class_tokens))
         elif not return_class_token and return_extra_tokens:
             return tuple(zip(outputs, extra_tokens))
         elif return_class_token and return_extra_tokens:

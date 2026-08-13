@@ -92,12 +92,6 @@ def height_distribution(heights, bins=10):
     return bin_edges, counts, percentages
 
 def count_in_range(values, low, high):
-    """
-    values: 一维 numpy 数组或 torch tensor
-    low: 区间下界
-    high: 区间上界（包含 high）
-    返回：数量、占比
-    """
     if not isinstance(values, np.ndarray):
         values = values.cpu().numpy()
 
@@ -181,19 +175,16 @@ My_TransfuserModel = TransfuserModel(backbone_config).to("cuda")
 
 image_backbone_ckpt = '/lpai/volumes/base-3da-ali-sh-mix/chengzhijing/DiffusionPlanner_v10/Diffusion-Planner/DiffusionDrive/diffusiondrive_navsim_88p1_PDMS' 
 
-backbone_state_dict = torch.load(image_backbone_ckpt, map_location=device)['state_dict']  # 先加载到CPU
+backbone_state_dict = torch.load(image_backbone_ckpt, map_location=device)['state_dict']
 
-# 键名转换
 backbone_state_dict = {
     k.replace("agent._transfuser_model.", ""): v
     for k, v in backbone_state_dict.items()
-    if "agent._transfuser_model." in k  # 只处理相关键
+    if "agent._transfuser_model." in k
 }
 
-# 加载状态字典
 missing_keys, unexpected_keys = My_TransfuserModel.load_state_dict(backbone_state_dict, strict=False)
 
-# 打印加载结果
 if missing_keys:
     print(f"Missing keys in image_backbone: {missing_keys}")
 if unexpected_keys:
